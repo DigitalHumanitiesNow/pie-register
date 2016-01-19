@@ -110,8 +110,8 @@ foreach($meta as $key=>$value)
                 <?php 
 				$form_label_alignment = (isset($data['form']['label_alignment']) && !empty($data['form']['label_alignment']))?$data['form']['label_alignment']:"left"; 
 				?>
-                  <option <?php if($form_label_alignment=='top') echo 'selected="selected"';?> value="top"><? _e("Top","piereg"); ?></option>
-                  <option <?php if($form_label_alignment=='left') echo 'selected="selected"';?> value="left"><? _e("Left","piereg"); ?></option>
+                  <option <?php if($form_label_alignment=='top') echo 'selected="selected"';?> value="top"><?php _e("Top","piereg"); ?></option>
+                  <option <?php if($form_label_alignment=='left') echo 'selected="selected"';?> value="left"><?php _e("Left","piereg"); ?></option>
                 <?php unset($form_label_alignment); ?>
                 </select>
               </div>

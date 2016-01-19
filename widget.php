@@ -238,4 +238,4 @@ class Pie_Forgot_Widget extends WP_Widget
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
 		return $instance;
 	}
-}?>
+}

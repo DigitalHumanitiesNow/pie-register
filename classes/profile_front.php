@@ -202,4 +202,4 @@ class Profile_front extends PieReg_Base
 		}
 		return $value;	
 	}	
-}?>
+}

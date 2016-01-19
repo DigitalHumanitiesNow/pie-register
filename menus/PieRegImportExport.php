@@ -153,7 +153,7 @@ piereg(document).ready(function(e) {
               </div>
             <?php _e("Date Range is optional, if no date range is selected all entries will be exported.","piereg"); ?>
             <div class="piereg_clear"></div>
-            <input type="submit" class="submit_btn" value="<? _e("Download CSV File","piereg")?>" />
+            <input type="submit" class="submit_btn" value="<?php _e("Download CSV File","piereg")?>" />
           </div>
         </li>
       </ul>
@@ -193,7 +193,7 @@ piereg(document).ready(function(e) {
         </li>
         <li>
           	<div class="fields">
-                <input type="submit" class="submit_btn submit_btn2" value="<? _e("Import","piereg")?>" />
+                <input type="submit" class="submit_btn submit_btn2" value="<?php _e("Import","piereg")?>" />
             </div>
         </li>
       </ul>

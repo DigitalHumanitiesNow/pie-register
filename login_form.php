@@ -422,4 +422,4 @@ if(!function_exists("login_form_captcha"))
 		}
 		return $output;
 	}
-}?>
+}

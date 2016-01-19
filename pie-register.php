@@ -5,9 +5,10 @@ Plugin URI: http://pieregister.genetechsolutions.com/
 Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 Author: Genetech Solutions
-Version: 2.0.17
+Version: 2.0.20
 Author URI: http://www.genetechsolutions.com/
-			
+GitHub Plugin URI: https://github.com/GTSolutions/Pie-Register
+GitHub Branch:     master
 CHANGELOG
 See readme.txt
 */
@@ -644,7 +645,7 @@ if( !class_exists('PieRegister') ){
 		private function show_invitaion_code_user(){
 			global $errors,$wpdb;
 				$prefix=$wpdb->prefix."pieregister_";
-				$inv_code = base64_decode($_GET['invitaion_code']);
+				$inv_code = esc_html(base64_decode($_GET['invitaion_code']));
 				
 				$invitaion_code_users = $wpdb->get_results(  $wpdb->prepare( "SELECT `user_login`,`user_email` FROM `wp_users` WHERE `ID` IN (SELECT user_id FROM `wp_usermeta` Where meta_key = 'invite_code' and meta_value = %s )", $inv_code )  );
 				?>
@@ -659,7 +660,7 @@ if( !class_exists('PieRegister') ){
 					table.invitaion-code-table tr:hover{background:#666;color:#FFF;}
 				</style>
 				<div style="width:100%">
-					<h2><?php _e("Activation Code","piereg");echo " : ".$inv_code; ?></h2>
+					<h2><?php _e("Activation Code","piereg");echo " : ".wp_kses($inv_code); ?></h2>
 					<table class="invitaion-code-table" width="100%" cellpadding="10" cellspacing="0">
 						<thead>
 							<tr>
@@ -941,7 +942,7 @@ if( !class_exists('PieRegister') ){
 							*/
 							if( $user ) {
 								wp_set_current_user( $user->ID, $user->user_login );
-								wp_set_auth_cookie( $user->ID );
+								wp_set_auth_cookie( $user->ID, $creds['remember'], $piereg_secure_cookie );
 								do_action( 'wp_login', $user->user_login, $user );
 							}
 							do_action("piereg_admin_login_before_redirect_hook",$user);
@@ -976,7 +977,7 @@ if( !class_exists('PieRegister') ){
 								*/
 								if( $user ) {
 									wp_set_current_user( $user->ID, $user->user_login );
-									wp_set_auth_cookie( $user->ID );
+									wp_set_auth_cookie( $user->ID, $creds['remember'], $piereg_secure_cookie );
 									do_action( 'wp_login', $user->user_login, $user );
 								}
 								do_action("piereg_user_login_before_redirect_hook",$user);
@@ -989,7 +990,7 @@ if( !class_exists('PieRegister') ){
 								*/
 								if( $user ) {
 									wp_set_current_user( $user->ID, $user->user_login );
-									wp_set_auth_cookie( $user->ID );
+									wp_set_auth_cookie( $user->ID, $creds['remember'], $piereg_secure_cookie );
 									do_action( 'wp_login', $user->user_login, $user );
 								}
 								do_action("piereg_user_login_before_redirect_hook",$user);
@@ -1938,7 +1939,8 @@ if( !class_exists('PieRegister') ){
 			{
 				if(isset($_POST['piereg_invitation_nonce']) && wp_verify_nonce( $_POST['piereg_invitation_nonce'], 'piereg_wp_invitation_nonce' ))
 				{
-					if($wpdb->query("DELETE FROM ".$codetable." WHERE id = ".$_POST['invi_del_id']))	
+					/*if($wpdb->query("DELETE FROM ".$codetable." WHERE id = ".$_POST['invi_del_id']))*/	
+					if($wpdb->query( $wpdb->prepare("DELETE FROM ".$codetable." WHERE id = %s", $_POST['invi_del_id']) ))
 					$_POST['notice'] = "The Invitation Code has been deleted";
 				}else{
 					$_POST['error'] = __("Sorry, your nonce did not verify","piereg");
@@ -3513,7 +3515,7 @@ if( !class_exists('PieRegister') ){
 			  }*/
 			  
 		}
-		function delete_invitation_codes($ids="0")
+		/*function delete_invitation_codes($ids="0")
 		{
 			global $wpdb;
 			$prefix=$wpdb->prefix."pieregister_";
@@ -3528,7 +3530,39 @@ if( !class_exists('PieRegister') ){
 			$codetable=$prefix."code";
 			$sql = "UPDATE `".$codetable."` SET `status`= ".$status." WHERE `id` IN (".$ids.")";
 			$wpdb->query($sql);
+		}*/
+		function delete_invitation_codes($ids="0")
+		{
+			global $wpdb;
+			$prefix=$wpdb->prefix."pieregister_";
+			$codetable=$prefix."code";
+			
+			$array_ids 		= explode(',', $ids);
+			$count_ids 		= count($array_ids);
+			$placeholders 	= array_fill(0, $count_ids, '%d');
+			$format 		= implode(', ', $placeholders);
+			
+			$sql = "DELETE FROM `$codetable` WHERE `id` IN($format)";
+			$wpdb->query( $wpdb->prepare($sql, $array_ids) );
 		}
+		function active_or_unactive_invitation_codes($ids="0",$status="1")
+		{
+			global $wpdb;
+			$prefix=$wpdb->prefix."pieregister_";
+			$codetable=$prefix."code";
+			
+			$array_ids 		= explode(',', $ids);
+			$count_ids 		= count($array_ids);
+			$placeholders 	= array_fill(0, $count_ids, '%d');
+			$format 		= implode(', ', $placeholders);
+			
+			$sql = "UPDATE `".$codetable."` SET `status`= %s WHERE `id` IN($format)";
+			
+			$args[] = $status;
+			$args	= array_merge($args, $array_ids);
+			
+			$wpdb->query( $wpdb->prepare($sql, $args) );
+		} 
 		function pireg_update_invitation_code_cb_url()
 		{
 			global $wpdb;
@@ -3754,4 +3788,4 @@ if( class_exists('PieRegister') ){
 		}
 	}
 register_uninstall_hook( __FILE__, array(  "PieRegister" , 'piereg_remove_all_settings' ) );
-}?>
+}

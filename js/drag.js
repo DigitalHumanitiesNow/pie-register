@@ -1138,7 +1138,7 @@ piereg(document).ready(function () {
 
 				var type = piereg("#type_" + id).val();
 				
-				if(type != "html")
+				if(type != "html" && type != 'sectionbreak')
 					piereg(this).val(type);
 
 			}

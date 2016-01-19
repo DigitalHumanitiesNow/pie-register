@@ -1,10 +1,10 @@
 ﻿=== Pie Register ===
-Contributors: genetech
+Contributors: GTSolutions
 
 Tags: register plugin, user register, register, registration, registration plugin, custom registration, custom login plugin, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
-Tested up to: 4.2.2
-Stable tag: 2.0.17
+Tested up to: 4.3
+Stable tag: 2.0.20
 
 Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Email verification, user moderation & more.
 == Description ==
@@ -33,6 +33,14 @@ With Pie Register you can:
 
 With the clean, attractive and easy to use interface introduced in Pie Register 2.0 and above you can drag and drop fields to your forms and add advanced registration features&#160;to your service that can help you go above and beyond the competition.
 
+= Translation =
+
+* Brazilian Portuguese (pt_BR) (thanks to <a href="mailto:guilhermebarbeiro@gmail.com">GBDesigner</a>)
+* Italian (it_IT) (thanks to <a href="mailto:gcassarino@gmail.com">Gianluca Cassarino</a>)
+* Serbo-Croatian (rs_SR) (thanks to <a href="mailto:djuraskovicb@gmail.com">Borisa Djuraskovic</a>)
+
+If you would like to create your own language pack or update the existing one, you can send <a href="http://codex.wordpress.org/Translating_WordPress" target="_blank">the text of PO and MO files</a> for <a href="http://pieregister.genetechsolutions.com/" target="_blank">GenetechSolutions</a> and we'll add it to the plugin. You can download the latest version of the program for work with PO and MO files <a href="http://www.poedit.net/download.php" target="_blank">Poedit</a>.
+
 == Installation ==
 Just follow the simple steps:
 
@@ -41,12 +49,23 @@ Just follow the simple steps:
 
 Please follow our plugin [documentation](http://pieregister.genetechsolutions.com/documentation/ "Pie-Register Documentation") on how to Create Registration Form, Login , Forgot Password and Profile Pages using Shortcodes and Widgets.
 
-
-
 == Support Forum ==
 Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-Register Forum") in order to get support regarding this plugin!
 
 == CHANGELOG ==
+### 2.0.20
+* Fixed "Remember me" issue.
+
+### 2.0.19
+* Fixed Security Vulnerability and SQL Injection issues.
+* Section break field label can now be keep emptied.
+* Added Hooks to PR Profile Update action.
+
+### 2.0.18
+* Fixed Password reset key error.
+* Fixed Addresss line 2 (was required to fill)
+* Removed unnecessary files
+
 ### 2.0.17
 * Fixed Un-escaped string  on Dashboard Widget.
 

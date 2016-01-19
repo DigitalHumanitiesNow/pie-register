@@ -99,18 +99,20 @@ function pieResetFormOutput($piereg_widget = false){
 		
 				$allow = apply_filters( 'allow_password_reset', true, $user->ID );
 				if($allow){
-					//$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
+					//Generate something random for key...
+					$key = wp_generate_password( 20, false );
 					
-					do_action('retrieve_password_key', $user_login);
-				   // $key = $wpdb->get_var($wpdb->prepare("SELECT user_activation_key FROM $wpdb->users WHERE user_login = %s", $user_login));
-				 // Generate something random for a key...
+					//let other plugins perform action on this hook
+					do_action( 'retrieve_password_key', $user_login, $key );
+					
+					//Generate something random for a hash...
 					if ( empty( $wp_hasher ) ) {
 						require_once ABSPATH . 'wp-includes/class-phpass.php';
+						$wp_hasher = new PasswordHash( 8, true );
 					}
-					$wp_hasher = new PasswordHash( 8, true );
-					$key = wp_generate_password( 20, false );
-					$hashed = $wp_hasher->HashPassword( $key );
-					do_action( 'retrieve_password_key', $user_login, $key );
+					
+					//$hashed = $wp_hasher->HashPassword( $key );
+					$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
 					
 					// Now insert the new md5 key into the db
 					$wpdb->update($wpdb->users, array('user_activation_key' => $hashed), array('user_login' => $user_login));
@@ -343,4 +345,4 @@ if(!function_exists("forgot_pass_captcha"))
 		}
 		return $output;
 	}
-}?>
+}

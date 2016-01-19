@@ -618,4 +618,4 @@ class Profile_admin extends PieReg_Base
 		echo ' enctype="multipart/form-data" ';
 	}
 	
-}?>
+}

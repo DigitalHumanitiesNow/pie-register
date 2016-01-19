@@ -384,7 +384,7 @@ class Registration_form extends PieReg_Base
 		 {
 		
 			$data .= '<div class="address">
-			  <input type="text" name="'.$this->name.'[address2]" id="address2_'.$this->id.'"  class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['address2']))?$address_values['address2']:"").'">
+			  <input type="text" name="'.$this->name.'[address2]" id="address2_'.$this->id.'"  class="input_fields" value="'.((isset($address_values['address2']))?$address_values['address2']:"").'">
 			  <label>'.__("Address Line 2","piereg").'</label>
 			</div>';
 		 }
@@ -1606,4 +1606,4 @@ class Registration_form extends PieReg_Base
 		endif;
 		return $pages ;
 	}					
-}?>
+}

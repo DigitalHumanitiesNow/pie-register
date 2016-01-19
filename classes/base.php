@@ -518,7 +518,7 @@ class PieReg_Base
 		global $wpdb;
 		$prefix=$wpdb->prefix."pieregister_";
 		$codetable=$prefix."code";
-		$wpdb->query("CREATE TABLE ".$codetable."(`id` INT( 5 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,`created` DATE NOT NULL ,`modified` DATE NOT NULL ,`name` TEXT NOT NULL ,`count` INT( 5 ) NOT NULL ,`status` INT( 2 ) NOT NULL ,`code_usage` INT( 5 ) NOT NULL) ENGINE = MYISAM ;");
+		$wpdb->query("CREATE TABLE IF NOT EXISTS `".$codetable."` (`id` INT( 5 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,`created` DATE NOT NULL ,`modified` DATE NOT NULL ,`name` TEXT NOT NULL ,`count` INT( 5 ) NOT NULL ,`status` INT( 2 ) NOT NULL ,`code_usage` INT( 5 ) NOT NULL) ENGINE = MYISAM ;");
 		/*$create_ctable_sql = "CREATE TABLE $codetable (
 			  id mediumint(9) NOT NULL AUTO_INCREMENT,
 			  created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
@@ -1379,4 +1379,4 @@ class PieReg_Base
 				return esc_sql(esc_attr(sanitize_text_field($new_post)));
 			}
 		}
-}?>
+}

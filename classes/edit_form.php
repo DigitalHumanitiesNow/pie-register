@@ -1293,7 +1293,7 @@ class Edit_form extends PieReg_Base
 		global $wpdb,$pie_success,$pie_error,$pie_error_msg,$pie_suucess_msg,$errors;
 		$errors = new WP_Error();
 		$password = $_POST['password'];
-		
+		do_action("pr_edit_user_profile_update_before",$this->user_id,$_POST);
 		foreach($this->data as $field)
 		{
 			//Some form fields which we can't save like paypal, submit,formdata
@@ -1374,10 +1374,13 @@ class Edit_form extends PieReg_Base
 				}
 			//}
 		}
+		
+		do_action("pr_edit_user_profile_update_after",$this->user_id,$_POST,$this->pie_error,$this->pie_success);
+		
 		if($this->pie_error)
 			$this->pie_error_msg = __('Something Went Wrong updating Profile fields, please try again!','piereg');
 		if($this->pie_success)
 			$this->pie_success_msg = __('Your Profile has been updated.','piereg');
 	}		
 			
-}?>
+}

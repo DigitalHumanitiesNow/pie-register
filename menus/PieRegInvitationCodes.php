@@ -115,7 +115,7 @@ function get_selected_box_ids()
 	});
 	if(checked_id.trim() != "" && piereg("#invitaion_code_bulk_option").val().trim() != "" && piereg("#invitaion_code_bulk_option").val() != "0")
 	{
-		if(confirm("Are you sure to "+piereg("#invitaion_code_bulk_option").val()+" selected invitation code(s).?") == true)
+		if(confirm("Are you sure to "+piereg("#invitaion_code_bulk_option").val().replace("unactive","deactivate")+" selected invitation code(s).?") == true)
 		{
 			checked_id = checked_id.slice(0,-1);
 			piereg("#select_invitaion_code_bulk_option").val(checked_id);
