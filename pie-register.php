@@ -1,14 +1,12 @@
 <?php
 /*
 Plugin Name: Pie Register
-Plugin URI: http://pieregister.genetechsolutions.com/
+Plugin URI: http://pieregister.com/
 Description: <strong>WordPress 3.5 + ONLY.</strong> Enhance your Registration form, Custom logo, Password field, Invitation codes, Paypal, Captcha validation, Email verification and more.
 
 Author: Genetech Solutions
-Version: 2.0.20
+Version: 2.0.21
 Author URI: http://www.genetechsolutions.com/
-GitHub Plugin URI: https://github.com/GTSolutions/Pie-Register
-GitHub Branch:     master
 CHANGELOG
 See readme.txt
 */
@@ -21,7 +19,7 @@ if(!defined('PIEREG_DB_VERSION'))
 if(!defined('PIEREG_PLUGIN_BASENAME'))
 	define('PIEREG_PLUGIN_BASENAME',plugin_basename( __FILE__ ));
 
-define('LOG_FILE', '.ipn_results.log');
+define('LOG_FILE', PIEREG_DIR_NAME.'/ipn_results.log');
 define('SSL_P_URL', 'https://www.paypal.com/cgi-bin/webscr');
 define('SSL_SAND_URL','https://www.sandbox.paypal.com/cgi-bin/webscr');
 
@@ -255,7 +253,8 @@ if( !class_exists('PieRegister') ){
 													 '<?php _e("* Invalid Username","piereg");?>',
 													 '<?php _e("* Invalid File","piereg");?>',
 													 '<?php _e("* Maximum value is ","piereg");?>',
-													 '<?php _e("* Alphabetic Letters only","piereg");?>'
+													 '<?php _e("* Alphabetic Letters only","piereg");?>',
+													 '<?php _e("* Only Alphanumeric characters are allowed","piereg");?>'
 													 );
 			</script>
 			<?php
@@ -372,8 +371,20 @@ if( !class_exists('PieRegister') ){
 			$links[] = '<a href="'. get_admin_url(null, 'admin.php?page=pie-general-settings') .'">'.(__("General Settings","piereg")).'</a>';   		
 			return $links;
 		}
+		function check_upgrade_remote()
+		{
+			require_once ( 'pie-updates.php' );
+			$plugin_current_version = '2.0.21';
+			//$plugin_remote_path = plugin_dir_url( __FILE__ ) . 'update.php';	
+			$plugin_remote_path = "http://pieregister.com/downloads/update.php";
+			$plugin_slug = plugin_basename( __FILE__ );
+			$license_user = '';
+			$license_key = '';
+			new WP_PieRegAutoUpdate ( $plugin_current_version, $plugin_remote_path, $plugin_slug, $license_user, $license_key );	
+		}
 		function pie_main()
 		{
+			$this->check_upgrade_remote();
 			//LOCALIZATION
 			load_plugin_textdomain( 'piereg', false, dirname(plugin_basename(__FILE__)) . '/lang/');
 			
@@ -479,18 +490,32 @@ if( !class_exists('PieRegister') ){
 			   ($theaction != 'logout' && !isset($_REQUEST['interim-login']) )
 			   )
 			{
+				if ( force_ssl_admin()  && ! is_ssl() ) {
+					$is_ssl = true;
+				}else{
+					$is_ssl = false;
+				}
 				switch($theaction){
 					case "register":
-						wp_redirect($this->get_redirect_url_pie(get_permalink($option['alternate_register'])));
+						if($is_ssl)
+						 wp_redirect(preg_replace('|^http://|', 'https://', $this->get_redirect_url_pie(get_permalink($option['alternate_register']))));
+						else
+						 wp_redirect($this->get_redirect_url_pie(get_permalink($option['alternate_register'])));
 						exit;
 					break;
 					case "lostpassword":
-						wp_redirect($this->get_redirect_url_pie(get_permalink($option['alternate_forgotpass'])));
+						if($is_ssl)
+						 wp_redirect(preg_replace('|^http://|', 'https://', $this->get_redirect_url_pie(get_permalink($option['alternate_forgotpass']))));
+						else
+						 wp_redirect($this->get_redirect_url_pie(get_permalink($option['alternate_forgotpass'])));
 						exit;
 					break;
 					default:
 						if(!empty($option['alternate_login'])){
-							wp_redirect($this->get_redirect_url_pie(get_permalink($option['alternate_login'])));
+							if($is_ssl)
+								wp_redirect(preg_replace('|^http://|', 'https://', $this->get_redirect_url_pie(get_permalink($option['alternate_login']))));
+							else
+						 		wp_redirect($this->get_redirect_url_pie(get_permalink($option['alternate_login'])));
 							exit;
 						}
 					break;
@@ -915,10 +940,19 @@ if( !class_exists('PieRegister') ){
 					$creds['user_password'] = $_POST['pwd'];
 					$creds['remember'] 		= isset($_POST['rememberme']);
 					
-					$piereg_secure_cookie = false;
-					if ( (!empty($_POST['log']) && !empty($_POST['pwd'])) && (!force_ssl_admin() && is_ssl()) ) {
+					$piereg_secure_cookie = '';
+					/*if ( (!empty($_POST['log']) && !empty($_POST['pwd'])) && (force_ssl_admin()) ) {
 						$piereg_secure_cookie = true;
-						force_ssl_admin(true);
+						//force_ssl_admin(true);
+					}*/
+					if ( !empty($_POST['log']) && !force_ssl_admin() ) {
+						$user_name = sanitize_user($_POST['log']);
+						if ( $user = get_user_by('login', $user_name) ) {
+							if ( get_user_option('use_ssl', $user->ID) ) {
+								$piereg_secure_cookie = true;
+								force_ssl_admin(true);
+							}
+						}
 					}
 					$user = wp_signon( $creds, $piereg_secure_cookie);
 				
@@ -989,8 +1023,8 @@ if( !class_exists('PieRegister') ){
 									*	Add Since 2.0.13
 								*/
 								if( $user ) {
-									wp_set_current_user( $user->ID, $user->user_login );
-									wp_set_auth_cookie( $user->ID, $creds['remember'], $piereg_secure_cookie );
+									//wp_set_current_user( $user->ID, $user->user_login );
+									//wp_set_auth_cookie( $user->ID, $creds['remember'], $piereg_secure_cookie );
 									do_action( 'wp_login', $user->user_login, $user );
 								}
 								do_action("piereg_user_login_before_redirect_hook",$user);
@@ -2841,7 +2875,7 @@ if( !class_exists('PieRegister') ){
 			if (! $this->ipn_log)
 				return; // is logging turned off?
 			// Write to log
-			$fp = fopen ( LOG_FILE , 'a' );
+			$fp = fopen ( LOG_FILE , 'a+' );
 			fwrite ( $fp, $this->ipn_status . "\n\n" );
 			fclose ( $fp ); // close file
 			chmod ( LOG_FILE , 0600 );
@@ -2876,12 +2910,11 @@ if( !class_exists('PieRegister') ){
 				$post_string .= $field.'='.urlencode(stripslashes($value)).'&'; 
 			}
 			$post_string.="cmd=_notify-validate"; // append ipn command
-			
 			// open the connection to paypal
 			if ($piereg['paypal_sandbox'] == "yes")
-				$fp = fsockopen ( 'ssl://www.sandbox.paypal.com', "443", $err_num, $err_str, 60 );
+				$fp = fsockopen ( 'tls://www.sandbox.paypal.com', "443", $err_num, $err_str, 60 );
 			else
-				$fp = fsockopen ( 'ssl://www.paypal.com', "443", $err_num, $err_str, 60 );
+				$fp = fsockopen ( 'tls://www.paypal.com', "443", $err_num, $err_str, 60 );
 	 
 			if(!$fp) {
 				// could not open the connection.  If loggin is on, the error message
@@ -2892,7 +2925,8 @@ if( !class_exists('PieRegister') ){
 			} else { 
 				// Post the data back to paypal
 				fputs($fp, "POST $url_parsed[path] HTTP/1.1\r\n"); 
-				fputs($fp, "Host: $url_parsed[host]\r\n"); 
+				fputs($fp, "Host: $url_parsed[host]\r\n");
+				fputs($fp, "User-Agent: Pie-Register IPN Validation Service\r\n");
 				fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n"); 
 				fputs($fp, "Content-length: ".strlen($post_string)."\r\n"); 
 				fputs($fp, "Connection: close\r\n\r\n"); 
@@ -2904,9 +2938,10 @@ if( !class_exists('PieRegister') ){
 			   } 
 			  fclose($fp); // close connection
 			}
-			
 			// Invalid IPN transaction.  Check the $ipn_status and log for details.
 			if (!eregi("VERIFIED",$this->ipn_response)) {
+				$this->ipn_status = "IPN NOT VERIFIED\n".print_r($this->ipn_response,1)."\n";
+				$this->log_ipn_results(false);   
 				return false;
 			} else {
 				$this->ipn_status = "IPN VERIFIED";
@@ -2915,14 +2950,18 @@ if( !class_exists('PieRegister') ){
 				$this->processPostPayment();
 				//////////////////////////////////////
 				$this->log_ipn_results(true); 
+				header("HTTP/1.1 200 OK");
+				die();
 				return true;
 			}
+			header("HTTP/1.1 402 Payment Required");
+			die();
 		} 
 		function ValidPUser(){
 			global $wpdb;
 			$piereg = get_option( 'pie_register_2' );
 			
-			if(isset($_POST['txn_id']) && $_POST['txn_id']){
+			if(isset($_POST['txn_id']) && $_GET['action'] == 'ipn_success'){
 				//We have a IPN to Validate
 				$this->validate_ipn();
 			}
@@ -2974,16 +3013,23 @@ if( !class_exists('PieRegister') ){
 			$return_data = explode("|",$_POST['custom']);
 			$hash 		= $return_data[0];
 			$user_id 	= $return_data[1];
-			if(!is_numeric($user_id ))
-				return false;
 			
 			$check_hash = get_usermeta( $user_id, "hash");
+			
 			if($check_hash != $hash)
+				return false;
+				
+			if(!is_numeric($user_id ))
 				return false;
 			
 			$user 		= new WP_User($user_id);
 			$option 	= get_option('pie_register_2');
 			update_user_meta( $user_id, 'active',1);
+			////////////////////////////////////////
+			//Since 2.0.21
+			update_user_meta( $user_id, 'pie_paypal_txn_id',$_POST['txn_id']);
+			update_user_meta( $user_id, 'pie_paypal_payer_id',$_POST['payer_id']);
+			update_user_meta( $user_id, 'pie_paypal_ipn_response',serialize($_POST));
 			//Sending E-Mail to newly active user
 			$subject 		= html_entity_decode($option['user_subject_email_payment_success'],ENT_COMPAT,"UTF-8");
 			$user_email 	= $user->user_email;
@@ -3641,8 +3687,8 @@ if( !class_exists('PieRegister') ){
 		function piereg_plugin_row_meta( $links, $file ) {
 			if ( $file == PIEREG_PLUGIN_BASENAME ) {
 				$row_meta = array(
-					'docs'		=>	'<a href="' . esc_url( apply_filters( 'pieregister_docs_url', 'http://pieregister.genetechsolutions.com/documentation/' ) ) . '" title="' . esc_attr( __( 'View Pie-Register Documentation', 'piereg' ) ) . '" target="_blank">' . __( 'Docs', 'piereg' ) . '</a>',
-					'support'	=>	'<a href="' . esc_url( apply_filters( 'pieregister_support_url', 'http://pieregister.genetechsolutions.com/forum/' ) ) . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'piereg' ) ) . '" target="_blank">' . __( 'Support', 'piereg' ) . '</a>',
+					'docs'		=>	'<a href="' . esc_url( apply_filters( 'pieregister_docs_url', 'http://pieregister.com/documentation/' ) ) . '" title="' . esc_attr( __( 'View Pie-Register Documentation', 'piereg' ) ) . '" target="_blank">' . __( 'Docs', 'piereg' ) . '</a>',
+					'support'	=>	'<a href="' . esc_url( apply_filters( 'pieregister_support_url', 'http://pieregister.com/forum/' ) ) . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'piereg' ) ) . '" target="_blank">' . __( 'Support', 'piereg' ) . '</a>',
 				);
 	
 				return array_merge( $links, $row_meta );
@@ -3651,7 +3697,7 @@ if( !class_exists('PieRegister') ){
 			return (array) $links;
 		}
 		function piereg_ssl_template_redirect(){
-			if ( (defined("FORCE_SSL_ADMIN") && FORCE_SSL_ADMIN == true) || is_ssl() ) {
+			if ( (defined("FORCE_SSL_ADMIN") && FORCE_SSL_ADMIN == true) && !is_ssl() ) {
 				if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') {
 					wp_redirect( preg_replace('|^http://|', 'https://', $this->get_current_permalink()) );
 					exit;

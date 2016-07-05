@@ -154,7 +154,10 @@ piereg(document).ready(function($){
 		piereg("#pie_regiser_form .pie_prev").click(function (){  
 			pieNextPage(this);
 		}); 
-		
+		piereg('input[name="pie_reset"]').click(function(){
+			piereg("#pie_register").find(".legend_txt").remove();
+			piereg("#pie_register").find("div.fieldset").removeClass("error");
+		});
 		
 		
 	})(jQuery);
@@ -234,7 +237,8 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 					case  "year":
 						if(piereg(option).val().trim() != "")
 						{
-							console.log( rules[i] );
+							//console.log( rules[i] );
+							//console.log( 'option' + piereg(option).val().trim() );
 							if(!piereg(option).val().trim().match(new RegExp(getAllRules[rules[i]].regex),piereg(option).val().trim()))
 							{
 								ShowErrorMsg(option,getCustomFieldMessage(option,getAllRules[rules[i]].alertText));
@@ -340,6 +344,7 @@ function ValidateField(rules,option,piereg_validate,IsWidget){
 			break;
 		}
 	}
+			
 	
 	return piereg_validate;
 }
@@ -422,8 +427,8 @@ function getRegexAndErrorMsg(){
 			"alertText": piereg_validation_engn[54]//"* Invalid File"
 		},
 		"alphanumeric": {
-			"regex": /^[a-zA-Z0-9]+$/,
-			"alertText": piereg_validation_engn[53]//"* Invalid Username"
+			"regex": /^[a-zA-Z0-9 ]+$/,
+			"alertText": piereg_validation_engn[57]//"* Invalid Username"
 		},
 		"alphabetic": {
 			"regex": /^[a-zA-Z\s]+$/,
@@ -500,7 +505,7 @@ function getRegexAndErrorMsg(){
 		},
 		 "phone_standard": {
 			// credit: jquery.h5validate.js / orefalo
-			"regex": /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
+			"regex": /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
 			"alertText": piereg_validation_engn[23]//"* Allowed Format (xxx) xxx-xxxx"
 		},
 		"phone_international": {

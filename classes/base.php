@@ -844,8 +844,19 @@ class PieReg_Base
 		for($a = 0 ;$a < sizeof($options);$a++)
 		{
 			$selected = "";
-			if($options[$a]==$sel)
-			$selected = 'selected="selected"';
+			if(isset($sel) && is_array($sel)){
+				
+				//var_dump($sel);
+				//print_r($sel);
+				//die($options[$a]);
+				if(in_array($options[$a],$sel)){
+					$selected = 'selected="selected"';
+					//die($options[$a]);
+				}
+			}else{
+				if($options[$a]==$sel)
+					$selected = 'selected="selected"';
+			}
 			$html .= '<option '.$selected.' value="'.$options[$a].'">'.$options[$a].'</option>';	
 		}
 		return $html;
@@ -1355,28 +1366,33 @@ class PieReg_Base
 		*	Added since 2.0.15
 	*/
 	function piereg_sanitize_post_data($post = array()){
-			if(!is_array($post) || empty($post))
-				return false;
-			
-			foreach($post as $key=>$val){
-				if( isset($_POST[$key]) && strpos($key,"username") !== false ){
-					$_POST[$key] = esc_sql(esc_attr(sanitize_user($_POST[$key])));
-				}elseif( isset($_POST[$key]) && ( strpos($key,"email") !== false ||  strpos($key,"e_mail") !== false ) ){
-					$_POST[$key] = esc_sql(esc_attr(sanitize_email($_POST[$key])));
-				}elseif( isset($_POST[$key]) ){
-					$_POST[$key] = $this->piereg_post_array_filter($_POST[$key]);
-				}
+		if(!is_array($post) || empty($post))
+			return false;
+		
+		foreach($post as $key=>$val){
+			if( isset($_POST[$key]) && strpos($key,"username") !== false ){
+				$_POST[$key] = esc_sql(esc_attr(sanitize_user($_POST[$key])));
+			}elseif( isset($_POST[$key]) && ( strpos($key,"email") !== false ||  strpos($key,"e_mail") !== false ) ){
+				$_POST[$key] = esc_sql(esc_attr(sanitize_email($_POST[$key])));
+			}elseif( isset($_POST[$key]) ){
+				$_POST[$key] = $this->piereg_post_array_filter($_POST[$key]);
 			}
 		}
-		function piereg_post_array_filter($post){
-			$new_post = $post;
-			if( isset($new_post) && is_array($new_post) ){
-				foreach($new_post as $k=>$val){
-					$new_post[$k] = $this->piereg_post_array_filter($val);
-				}
-				return $new_post;
-			}else{
-				return esc_sql(esc_attr(sanitize_text_field($new_post)));
+	}
+	function piereg_post_array_filter($post){
+		$new_post = $post;
+		if( isset($new_post) && is_array($new_post) ){
+			foreach($new_post as $k=>$val){
+				$new_post[$k] = $this->piereg_post_array_filter($val);
 			}
+			return $new_post;
+		}else{
+			return esc_sql(esc_attr(sanitize_text_field($new_post)));
 		}
+	}
+	//Added since 2.0.21
+	function stripslashes_deep($value){
+		return is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value);
+	}
+	
 }

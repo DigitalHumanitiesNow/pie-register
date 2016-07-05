@@ -4,7 +4,7 @@ Contributors: GTSolutions
 Tags: register plugin, user register, register, registration, registration plugin, custom registration, custom login plugin, custom login, custom registration, enhance login, enhance profile, custom  logo screen, user registration, custom profile page
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 2.0.20
+Stable tag: 2.0.21
 
 Custom Registration form, Custom Login Pages, Custom Profile Page, Invitation codes, Paypal, Email verification, user moderation & more.
 == Description ==
@@ -275,15 +275,15 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-R
 ### v1.2.6 October 4 2011
 * Fixed Multiple Invitation Saving Problem
 
-=v1.2.5
-*Fixed custom meta fields "Saving" problem by the admin. (Fixed by Julian Warren with Thanks)
-*Added New Layout Pie-Register Menu built!
+### v1.2.5
+* Fixed custom meta fields "Saving" problem by the admin. (Fixed by Julian Warren with Thanks)
+* Added New Layout Pie-Register Menu built!
 
 ### v1.2.4
-*Fixed the "Backslash" problem on the admin Setting Page.
+* Fixed the 'Backslash' problem on the admin Setting Page.
 
 ### v1.2.3
-*Highlighted the Code to put on the wp-login.php at the plugin page.
+* Highlighted the Code to put on the wp-login.php at the plugin page.
 
 ### v1.2.2
 
@@ -297,7 +297,7 @@ Please visit our [Website Forum](http://pieregister.genetechsolutions.com "Pie-R
 * Compatible to Wp 3.0.4
 
 
-=v1.2.0
+### v1.2.0
 
 * Fixed Image uploads errors.
 * First step to Compatiblity to Wp 3.0

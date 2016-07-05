@@ -271,13 +271,16 @@ body .pieregWrapper #pie_register .fields .fieldset .piereg_payment_selection la
 	margin-top: 7px;
 	margin-bottom: 10px;
 }
-.pieregWrapper #pie_register .fields .pie_list{float:left; width: 100%; position:relative;}
+.pieregWrapper #pie_register .fields .pie_list{float:left; width: 64%; position:relative;margin-left:29%;}
+.pieregWrapper #pie_register .fields .pie_list:nth-child(2){
+	margin-left:0;
+}
 .widget #pie_register .fields .pie_list{float:right; width: 87%; position:relative;}
 .widget .pie_list .input_fields {
   float: left !important;
   width: 48% !important;
 }
-.pieregWrapper #pie_register .fields .pie_list img{position:absolute; left:-20px;top: 0%; cursor:pointer;}
+.pieregWrapper #pie_register .fields .pie_list img{position:absolute; ;top: 0%; cursor:pointer;}
 .pieregWrapper #pie_register .fields .pie_list input.input_fields{margin-bottom: 10px; float:left; margin-right:0.8%}
 .pieregWrapper #pie_register .fields {
 	width: 100%;
@@ -459,15 +462,33 @@ body .pieregWrapper #pie_register .fields .fieldset .piereg_payment_selection la
 	margin-right: 2%;
 	margin-left: 1%;
 }
-.pieregWrapper #pie_register .fields .piereg_time .time_fields {
+.pieregWrapper #pie_register .fields .date_format_field .time_fields {
 	float: left;
 	width: 28%;
+	margin-right:2.745%;
+}
+.pieregWrapper #pie_register .fields .piereg_time.date_format_field .time_fields:last-child{
+	margin-right:0;
+	margin-left:0 !important;
+}
+.pieregWrapper #pie_register .fields .piereg_time .time_fields {
+	float: left;
+	width: 31.5%;
+}
+.pieregWrapper #pie_register .fields .piereg_time .time_fields:last-child{
+	margin-left:2.75%;
+}
+.pieregWrapper #pie_register .fields .piereg_time .colon {
+	float: left;
+	line-height: 21px;
+	margin-right: 0.66%;
+	margin-left: 0.71%;
 }
 .pieregWrapper #pie_register .fields .piereg_time .time_fields .input_fields {
-	width: 89%;
+	width: 100%;
 	margin-bottom:3px;
 	float: left;
-	margin-right: 2%;
+	margin-right: 0%;
 }
 .pieregWrapper #pie_register .fields .piereg_time .time_fields label {
 	font-size:14px;
@@ -482,6 +503,7 @@ body .pieregWrapper #pie_register .fields .fieldset .piereg_payment_selection la
 	width: 100%;
 	height: auto;
 	margin-left: 6%;
+	margin-left:0%;
 	margin-top: 0px;
 }
 .widget #pie_register .fields select{
@@ -542,6 +564,10 @@ body .pieregWrapper #pie_register .fields .fieldset .piereg_payment_selection la
 	padding-left: 40px;
 	/*border-radius: 8px;*/
 	margin: 0 0 10px;
+	clear:both;
+}
+.piereg_login_error a{
+	color:#fff;
 }
 .piereg_message {
 	margin: 0 0 0px 0px;
@@ -555,6 +581,7 @@ body .pieregWrapper #pie_register .fields .fieldset .piereg_payment_selection la
 	/*border-radius: 8px;*/
 	color:#ffffff;
 	margin: 0 0 10px;
+	clear:both;
 }
 .piereg_warning {
 	margin: 0px 0px 0px 0px;
@@ -568,6 +595,7 @@ body .pieregWrapper #pie_register .fields .fieldset .piereg_payment_selection la
 	/*border-radius: 8px;*/
 	color:#ffffff;
 	margin: 0 0 10px;
+	clear:both;
 }
 @font-face {
 	font-family: 'HelveticaRegular';
@@ -1417,10 +1445,10 @@ div.pieregForgotPassword{
 	.piereg_container div.piereg_login_container form p .input{width:100%;}
 }
 
-.piereg_container .piereg_login_wrapper .submit input[type="submit"], .pieregWrapper input[type="submit"], .pieregWrapper .piereg_cancel_profile_edit_btn{
+.piereg_container .piereg_login_wrapper .submit input[type="submit"], .pieregWrapper input[type="submit"], .pieregWrapper .piereg_cancel_profile_edit_btn, .piereg_container .piereg_login_wrapper .submit input[type="reset"], .pieregWrapper input[type="reset"]{
 	padding: 6px 10px;
 	font-size: 15px;
-	color:#fff
+	margin:0 2px;
 }
 
 

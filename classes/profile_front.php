@@ -131,7 +131,8 @@ class Profile_front extends PieReg_Base
 	function getValue()
 	{
 		//$value = get_usermeta($this->user_id, $this->slug);
-		$value = get_user_meta($this->user_id, $this->slug,true);
+		//Modified since 2.0.21
+		$value = $this->stripslashes_deep(get_user_meta($this->user_id, $this->slug,true));
 		if($this->type=="date")
 		{
 			if(isset($value['date']) && is_array($value['date']))
@@ -144,19 +145,33 @@ class Profile_front extends PieReg_Base
 					$val = str_replace("yy",$value['date']['yy'],$val);
 					return 	$val;
 				}
-				else
-				{
-					return implode($this->field['date_format'][2],$value['date']);			
+				else{
+					//Added since 2.0.21
+					$cleaned_val = array_filter($value['date']);
+					if($cleaned_val){
+						return implode($this->field['date_format'][2],$value['date']);
+					}else{
+						return false;
+					}
 				}
 				
 				
 			}
 			return $value;			
 		}
-		else if($this->type=="time")
-		{
-			if(is_array($value))
-			return implode(" : ",$value);	
+		else if($this->type=="time"){
+			//var_dump($value);
+			//Added since 2.0.21
+			if(((isset($value['hh']) && $value['hh'] === '') && (isset ($value['mm']) && $value['mm'] === ''))){
+				return false;
+			}
+			if(is_array($value)){
+				if($value['hh'] != '')
+					$value['hh'] = ($value['hh']);
+				if($value['mm'] != '')
+					$value['mm'] = ($value['mm']);
+				return implode(" : ",$value);
+			}
 			return $value;
 		}
 		else if($this->type=="list")
@@ -186,14 +201,27 @@ class Profile_front extends PieReg_Base
 		}
 		else if($this->type=="multiselect")
 		{
+			//modified since 2.0.21
 			$list = "<ol>";
+			$combined_array = array_combine($this->field['value'],$this->field['display']);
 			for($a = 0 ; $a < sizeof($value) ; $a++ )
 			{
 				if(isset($value[$a]))
-					$list .= "<li>".$value[$a]."</li>";	
+					$list .= "<li>".$combined_array[$value[$a]]."</li>";	
 			}	
 			$list .= "</ol>";
 			$value = $list;	
+		}
+		//added since 2.0.21
+		elseif($this->type == "dropdown"){
+			$combined_array = array_combine($this->field['value'],$this->field['display']);
+			$corrected_value = array();
+			for($a = 0 ; $a < sizeof($value) ; $a++ )
+			{
+				if(isset($value[$a]))
+					$corrected_value[$a] = $combined_array[$value[$a]];
+			}
+			$value = implode(", ",$corrected_value);
 		}
 		else if(is_array($value))
 		{

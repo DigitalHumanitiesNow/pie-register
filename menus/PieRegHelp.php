@@ -39,15 +39,15 @@ piereg(document).ready(function(){
     <div class="pieHelpMenuButtonContaner">
         <ul class="pieHelpMenuButton">
         <li><a href="https://www.youtube.com/channel/UCuLxfC2jcyAS5ns4ZT_7jcQ" target="_blank_pieHelp_1"><?php _e("Video Tutorials","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/faqs/" target="_blank_pieHelp_1"><?php _e("Browse Frequently Asked Questions","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/get-support/" target="_blank_pieHelp_2"><?php _e("Pie-Register v2.0 Beta Problems","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/forum/" target="_blank_pieHelp_3"><?php _e("Go To Forums","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/using-pie-register/" target="_blank_pieHelp_4"><?php _e("Review Documentation","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/getting-started/" target="_blank_pieHelp_5"><?php _e("Getting Started","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/setting-up-pie-register/" target="_blank_pieHelp_6"><?php _e("Setting up Pie-Register","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/getting-started/" target="_blank_pieHelp_7"><?php _e("Installation Problems","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/using-pie-register/" target="_blank_pieHelp_8"><?php _e("Using Pie-Register","piereg"); ?></a></li>
-            <li><a href="http://pieregister.genetechsolutions.com/forums/forum/news-announcements/" target="_blank_pieHelp_9"><?php _e("News and Announcements","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/faqs/" target="_blank_pieHelp_1"><?php _e("Browse Frequently Asked Questions","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/get-support/" target="_blank_pieHelp_2"><?php _e("Pie-Register v2.0 Beta Problems","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/forum/" target="_blank_pieHelp_3"><?php _e("Go To Forums","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/using-pie-register/" target="_blank_pieHelp_4"><?php _e("Review Documentation","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/getting-started/" target="_blank_pieHelp_5"><?php _e("Getting Started","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/setting-up-pie-register/" target="_blank_pieHelp_6"><?php _e("Setting up Pie-Register","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/getting-started/" target="_blank_pieHelp_7"><?php _e("Installation Problems","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/using-pie-register/" target="_blank_pieHelp_8"><?php _e("Using Pie-Register","piereg"); ?></a></li>
+            <li><a href="http://pieregister.com/forums/forum/news-announcements/" target="_blank_pieHelp_9"><?php _e("News and Announcements","piereg"); ?></a></li>
         </ul>
     </div>
     
@@ -138,12 +138,12 @@ piereg(document).ready(function(){
             <div class="piereg_inner">
                 <h4><?php _e("Do you like this plugin?","piereg"); ?></h4>
                 <p class="piereg_inner_message">
-                <span><a href="http://wordpress.org/support/view/plugin-reviews/pie-register?filter=5" title="<?php _e("Rate it 5","piereg"); ?>" target="_blank">
+                <?php /*?><span><a href="http://wordpress.org/support/view/plugin-reviews/pie-register?filter=5" title="<?php _e("Rate it 5","piereg"); ?>" target="_blank">
                 <?php _e("Rate it 5","piereg"); ?>
-                </a> <?php _e("on WordPress.org","piereg"); ?></span><br />
+                </a> <?php _e("on WordPress.org","piereg"); ?></span><br /><?php */?>
                 <span><?php _e("Blog about it & link to the","piereg"); ?>
                 <a href="http://pieregister.genetechsolutions.com/" title="<?php _e("plugin page","piereg"); ?>" target="_blank"><?php _e("plugin page","piereg"); ?></a></span><br />
-                <span><?php _e("Check out our","piereg"); ?> <a href="https://wordpress.org/plugins/pie-register/" target="_blank" title="<?php _e("WordPress plugins","piereg"); ?>" ><?php _e("WordPress plugins","piereg"); ?></a></span>
+                <?php /*?><span><?php _e("Check out our","piereg"); ?> <a href="https://wordpress.org/plugins/pie-register/" target="_blank" title="<?php _e("WordPress plugins","piereg"); ?>" ><?php _e("WordPress plugins","piereg"); ?></a></span><?php */?>
                 </p>
             </div>
             <hr />
@@ -161,8 +161,3 @@ piereg(document).ready(function(){
 
   </div>
 </div>
-
-
-
-
-

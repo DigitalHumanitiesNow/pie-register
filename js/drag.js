@@ -313,8 +313,8 @@ function bindButtons() {
 
 	//Adding Functionalities to right menu
 
-	piereg(".right_menu_heading").live("click", function (e) {
-
+	piereg(".pieregister-admin").on("click", ".right_menu_heading",function (e) {
+		e.preventDefault();
 		if (piereg(this).parent().find("ul").is(':visible')) {
 
 			piereg(this).parent().find("ul").slideUp();
@@ -367,23 +367,20 @@ function bindButtons() {
 
 		
 
-		e.preventDefault();
+		
 
 	});
 
 	//Adding Functionalities to Edit buttons
-
-	piereg(".edit_btn").live("click", function (e) {
-
-		piereg(this).parents(".fields").find(".fields_main").toggle();
-
+	piereg(".pieregister-admin").on("click", ".edit_btn",function (e){
+		piereg(this).closest(".fields").find(".fields_main").toggle();
 		e.preventDefault();
-
 	});
+	
 
 	//Adding Functionalities to delete (X) buttons
 
-	piereg(".delete_btn").live("click", function () {
+	piereg(".pieregister-admin #formeditor").on("click", ".delete_btn", function () {
 
 		var delId = piereg(this).attr("rel");
 
@@ -391,7 +388,7 @@ function bindButtons() {
 
 		var field = piereg("input[name='field[" + delId + "][field_name]']").val();
 
-		piereg(this).parents("li").fadeOut(function () {
+		piereg(this).closest("li").fadeOut(function () {
 
 			piereg(this).remove();
 			/*
@@ -424,7 +421,7 @@ function bindButtons() {
 
 	//Change Label ehile editing label field
 
-	piereg(".field_label").live("keyup", function () {
+	piereg(".pieregister-admin").on("keyup",".field_label", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -440,7 +437,7 @@ function bindButtons() {
 	
 	
 
-	piereg(".field_label2").live("keyup", function () {
+	piereg(".pieregister-admin").on("keyup",".field_label2", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -456,7 +453,7 @@ function bindButtons() {
 
 	//Change Field length
 
-	piereg(".field_length").live("keyup", function () {
+	piereg(".pieregister-admin").on("keyup",".field_length", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -478,7 +475,7 @@ function bindButtons() {
 
 	//Change Field default value
 
-	piereg(".field_default_value").live("keyup", function () {
+	piereg(".pieregister-admin").on("keyup", ".field_default_value", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -492,7 +489,7 @@ function bindButtons() {
 
 	//Change Field placeholder
 
-	piereg(".field_placeholder").live("keyup", function () {
+	piereg(".pieregister-admin").on("keyup", ".field_placeholder", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -506,7 +503,7 @@ function bindButtons() {
 
 	//Change Field rows
 
-	piereg(".field_rows").live("keyup", function () {
+	piereg(".pieregister-admin").on("keyup",".field_rows", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -520,7 +517,7 @@ function bindButtons() {
 
 	//Change Field Cols
 
-	piereg(".field_cols").live("keyup", function () {
+	piereg(".pieregister-admin").on("keyup", ".field_cols", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -534,7 +531,7 @@ function bindButtons() {
 
 	//Next Button
 
-	piereg(".next_button").live("change", function () {
+	piereg(".pieregister-admin").on("change", ".next_button", function () {
 
 		if (piereg(this).attr('checked')) {
 
@@ -566,7 +563,7 @@ function bindButtons() {
 
 	//Previous Button
 
-	piereg(".prev_button").live("change", function () {
+	piereg(".pieregister-admin").on("change", ".prev_button", function () {
 
 		if (piereg(this).attr('checked')) {
 
@@ -598,7 +595,7 @@ function bindButtons() {
 
 	//Calendar Icon
 
-	piereg(".calendar_icon").live("change", function () {
+	piereg(".pieregister-admin").on("change", ".calendar_icon", function () {
 
 		if (piereg(this).attr('checked')) {
 
@@ -634,7 +631,7 @@ function bindButtons() {
 
 	});
 
-	piereg("select.date_type").live("change", function () {
+	piereg(".pieregister-admin").on("change", ".select.date_type", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -670,7 +667,7 @@ function bindButtons() {
 
 	//Change Date Format
 
-	piereg("select.date_format").live("change", function () {
+	piereg(".pieregister-admin").on("change", "select.date_format", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -707,7 +704,7 @@ function bindButtons() {
 
 	//Change Time Format
 
-	piereg("select.time_format").live("change", function () {
+	piereg(".pieregister-admin").on("change", "select.time_format", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -727,7 +724,7 @@ function bindButtons() {
 
 	//Change Address Type
 
-	piereg("select.address_type").live("change", function () {
+	piereg(".pieregister-admin").on("change", "select.address_type", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -799,7 +796,7 @@ function bindButtons() {
 
 	//Change Default Country
 
-	piereg("select.default_country").live("change", function () {
+	piereg(".pieregister-admin").on("change", "select.default_country", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -813,7 +810,7 @@ function bindButtons() {
 
 	//Change Name Format 
 
-	piereg("select.name_format").live("change", function () {
+	piereg(".pieregister-admin").on("change", "select.name_format", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -843,19 +840,20 @@ function bindButtons() {
 
 	//Adding option Display Value
 
-	piereg("input.select_option_display,input.select_option_value").live("keyup", function () {
+	//piereg("input.select_option_display,input.select_option_value").on("keyup", function () {
+	piereg(".pieregister-admin").on("keyup", "input.select_option_display,input.select_option_value", function () {
 
 		changeDropdown(piereg(this));
 
 	});
 
-	piereg("input.select_option_checked").live("click", function () {
+	piereg(".pieregister-admin").on("click", "input.select_option_checked", function () {
 
 		changeDropdown(piereg(this));
 
 	});
 
-	piereg(".paypal").live("click", function () {
+	piereg(".pieregister-admin").on("click", ".paypal", function () {
 
 		piereg("#paypal_button").remove();
 
@@ -865,7 +863,7 @@ function bindButtons() {
 
 	});
 
-	piereg(".submit_button").live("click", function () {
+	piereg(".pieregister-admin").on("click", ".submit_button", function () {
 
 		piereg("#paypal_button").remove();
 
@@ -873,7 +871,7 @@ function bindButtons() {
 
 	});
 
-	piereg("ul.controls li a.default").live("click", function () {
+	piereg(".pieregister-admin").on("click", "ul.controls li a.default", function () {
 
 		piereg(this).parent().hide();
 
@@ -891,7 +889,7 @@ function bindButtons() {
 
 	//Allow only numeric on Length, Rows, Cols, Length Field 
 
-	piereg(".numeric").live("keydown", function (event) {
+	piereg(".pieregister-admin").on("keydown", ".numeric", function (event) {
 
 		if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 || event.keyCode == 13 ||
 
@@ -923,7 +921,7 @@ function bindButtons() {
 
 	//Submit Button Properties Icon
 
-	piereg(".reg_success").live("change", function () {
+	piereg(".pieregister-admin").on("change", ".reg_success", function () {
 
 		piereg(".submit_meta").hide();
 
@@ -943,7 +941,7 @@ function bindButtons() {
 
 	//default state
 
-	piereg(".default_state").live("change", function () {
+	piereg(".pieregister-admin").on("change", ".default_state", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -959,7 +957,7 @@ function bindButtons() {
 
 	});
 
-	piereg(".hide_state").live("change", function () {
+	piereg(".pieregister-admin").on("change", ".hide_state", function () {
 
 		var id = piereg(this).attr("id");
 
@@ -1033,7 +1031,7 @@ function bindButtons() {
 
 	});
 
-	piereg("#confirm_email").live("change", function () {
+	piereg(".pieregister-admin").on("change", "#confirm_email", function () {
 
 		if (piereg(this).attr('checked')) {
 			/*piereg("#confirm_email_label_1").show();*/
@@ -1172,6 +1170,8 @@ piereg(document).ready(function () {
 	piereg("#elements").droppable({
 
 		// accept: ".controls li p",
+		
+		
 
 		drop: function (event, ui) {
 
@@ -1193,7 +1193,12 @@ piereg(document).ready(function () {
 
 				no++;
 
-				piereg(".swap_class").trigger("change")
+				piereg(".swap_class").trigger("change");
+				var delId = piereg(this).attr("rel");
+
+				var delType = piereg("#type_" + delId).val();
+		
+				var field = piereg("input[name='field[" + delId + "][field_name]']").val();
 
 				if (dragType == "invitation" || dragType == "name" || dragType == "captcha" || dragType == "math_captcha" || dragType == "aim" || dragType == "yim" || dragType == "jabber" || dragType == "description" || dragType == "url" || delType == "username") {
 

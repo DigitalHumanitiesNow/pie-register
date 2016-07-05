@@ -126,7 +126,7 @@ class Edit_form extends PieReg_Base
 	function addTextArea()
 	{		
 		//$val = get_usermeta($this->user->data->ID , $this->slug);
-		$val = get_user_meta($this->user->data->ID , $this->slug,true);
+		$val = stripslashes(get_user_meta($this->user->data->ID , $this->slug,true));
 		return '<textarea id="'.$this->id.'" name="'.$this->name.'" rows="'.$this->field['rows'].'" cols="'.$this->field['cols'].'"  class="'.$this->addClass("").'"  placeholder="'.$this->field['placeholder'].'">'.$val.'</textarea>';		
 	}
 	function addName()
@@ -156,12 +156,12 @@ class Edit_form extends PieReg_Base
 		$val = get_user_meta($this->user->data->ID , $this->slug,true);
 		$data .= '<div class="piereg_time">
 					<div class="time_fields">
-						<input maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'" value="'.((isset($val['hh']))?$val['hh'] : "").'">
+						<input maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'" value="'.(isset($val['hh'])?($val['hh']) : "").'">
 						<label>HH</label>
 					</div>
 					<span class="colon">:</span>
 					<div class="time_fields">
-						<input maxlength="2" id="mm_'.$this->id.'" type="text" name="'.$this->name.'[mm]"  class="'.$this->addClass().'" value="'.((isset($val['mm']))?$val['mm']:"").'">
+						<input maxlength="2" id="mm_'.$this->id.'" type="text" name="'.$this->name.'[mm]"  class="'.$this->addClass().'" value="'.(isset($val['mm'])?($val['mm']):"").'">
 						<label>MM</label>
 					</div>
 				<div id="time_format_field_'.$this->id.'" class="time_fields"></div>';
@@ -187,17 +187,28 @@ class Edit_form extends PieReg_Base
 		$name = $this->name."[]";
 		//$val = get_usermeta($this->user->data->ID , $this->slug);
 		$val = get_user_meta($this->user->data->ID , $this->slug,true);
-		
+		$sel = $val[0];
 		if($this->field['type']=="multiselect")
 		{
-			$multiple 	= 'multiple';			
+			$multiple 	= 'multiple';
+			$sel = $val;		
 		}		
 		$data .= '<select '.$multiple.' id="'.$name.'" name="'.$name.'" class="'.$this->addClass("").'" >';
 	
 		if($this->field['list_type']=="country")
 		{
 			 $countries = get_option("pie_countries");			 
-			$data .= $this->createDropdown($countries,$val[0]);			   	
+			$data .= $this->createDropdown($countries,$sel);			   	
+		}
+		else if($this->field['list_type']=="us_states")
+		{
+			$us_states	= get_option("pie_us_states");
+			$data .= $this->createDropdown($us_states,$sel);
+		}
+		else if($this->field['list_type']=="can_states")
+		{
+			$can_states	= get_option("pie_can_states");
+			$data .= $this->createDropdown($can_states,$sel);
 		}
 		else if($this->field['list_type']=="months")
 		{
@@ -222,7 +233,7 @@ class Edit_form extends PieReg_Base
 				{
 					$selected = 'selected="selected"';	
 				}				
-				if($this->field['value'][$a] !="" && $this->field['display'][$a] != "")
+				//if($this->field['value'][$a] !="" && $this->field['display'][$a] != "")
 				$data .= '<option '.$selected.' value="'.$this->field['value'][$a].'">'.$this->field['display'][$a].'</option>';	
 			}		
 		}	
@@ -321,14 +332,14 @@ class Edit_form extends PieReg_Base
 		 {
 		
 			$data .= '<div class="address">
-			  <input type="text" name="'.$this->name.'[address2]" id="address2_'.$this->id.'"  class="'.$this->addClass().'"  value="'.((isset($val['address2']))?$val['address2']:"").'">
+			  <input type="text" name="'.$this->name.'[address2]" id="address2_'.$this->id.'"  class="'.$this->addClass().'" value="'.((isset($val['address2']))?$val['address2']:"").'">
 			  <label>'.__("Address Line 2","piereg").'</label>
 			</div>';
 		 }
 		
 		$data .= '<div class="address">
 		  <div class="address2">
-			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass("input_fields",array("custom[alphabetic]")).'"  value="'.((isset($val['city']))?$val['city']:"").'">
+			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="input_fields addressLine2" value="'.((isset($val['city']))?$val['city']:"").'">
 			<label>'.__("City","piereg").'</label>
 		  </div>';
 		
@@ -338,7 +349,7 @@ class Edit_form extends PieReg_Base
 			 	if($this->field['address_type'] == "International")
 				{
 					$data .= '<div class="address2"  >
-					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass("input_fields",array("custom[alphabetic]")).'"  value="'.((isset($val['state']))?$val['state']:"").'">
+					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass().'"  value="'.((isset($val['state']))?$val['state']:"").'">
 					<label>'.__("State / Province / Region","piereg").'</label>
 				 	 </div>';		
 				}
@@ -439,11 +450,11 @@ class Edit_form extends PieReg_Base
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input value="'.$val['date']['mm'].'" id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'">
+					<input value="'.($val['date']['mm']).'" id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'">
 					<label>'.__("MM","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input value="'.$val['date']['dd'].'" id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'">
+					<input value="'.($val['date']['dd']).'" id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'">
 					<label>'.__("DD","piereg").'</label>
 				  </div>				  
 				</div>';	
@@ -457,7 +468,7 @@ class Edit_form extends PieReg_Base
 				}
 				$data .= '<div class="piereg_time date_format_field">
 				 <div class="time_fields">
-					<input value="'.$val['date']['dd'].'" id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'">
+					<input value="'.($val['date']['dd']).'" id="dd_'.$this->id.'" name="'.$this->name.'[date][dd]" maxlength="2"  type="text" class="'.$this->addClass("input_fields",array("custom[day]")).'">
 					<label>'.__("DD","piereg").'</label>
 				  </div>	
 				 <div class="time_fields">
@@ -465,7 +476,7 @@ class Edit_form extends PieReg_Base
 					<label>'.__("YYYY","piereg").'</label>
 				  </div>
 				  <div class="time_fields">
-					<input value="'.$val['date']['mm'].'" id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'">
+					<input value="'.($val['date']['mm']).'" id="mm_'.$this->id.'" name="'.$this->name.'[date][mm]" maxlength="2" type="text" class="'.$this->addClass("input_fields",array("custom[month]")).'">
 					<label>'.__("MM","piereg").'</label>
 				  </div>				  			  
 				</div>';	
@@ -476,7 +487,7 @@ class Edit_form extends PieReg_Base
 			if(isset($val['date']))
 			if(isset($val['date']['yy']) && is_array($val['date']['yy']))
 			{
-				$val = 	$val['date']['yy']."-".$val['date']['mm']."-".$val['date']['dd'];
+				$val = 	$val['date']['yy']."-".($val['date']['mm'])."-".($val['date']['dd']);
 			}
 			else
 			{
@@ -702,14 +713,22 @@ class Edit_form extends PieReg_Base
 		{
 			$val[] = "custom[url]";		
 		}
-		else if($this->field['type']=="phone")
+		/*else if($this->field['type']=="phone")
 		{
 			$val[] = "custom[phone]";		
+		}*/
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']=="standard") || (isset($this->field['phone_format']) && $this->field['phone_format']=="standard" ))
+		{
+			$val[] = "custom[phone_standard]";		
+		}
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']=="international") || (isset($this->field['phone_format']) && $this->field['phone_format']=="international"))
+		{
+			$val[] = "custom[phone_international]";		
 		}
 		else if($this->field['type']=="time")
 		{
 			$val[] = "custom[number]";	
-			$val[] = "minSize[2]";
+			$val[] = "minSize[1]";
 			$val[] = "maxSize[2]";	
 		}
 		else if($this->field['type']=="upload" && !empty($this->field['file_types']) && explode(",",$this->field['file_types']) > 0)
@@ -726,6 +745,96 @@ class Edit_form extends PieReg_Base
 		
 		return $class;	
 	}
+	/*function addClass($default = "input_fields",$val = array())
+	{
+		$class = $default." ".(isset($this->field['css'])?$this->field['css']:"");
+		
+		if(isset($this->field['required']) && $this->field['required'] && $this->field['type'] != "password")
+		{
+			if($this->field['type'] == "upload" || $this->field['type'] == "profile_pic"){
+				$meta_value = get_user_meta($this->user->data->ID , $this->slug,true);
+				if(empty($meta_value)){
+					$val[] = "required";
+				}
+			}else{
+				$val[] = "required";
+			}
+		}
+		
+		if(isset($this->field['length']) && intval($this->field['length']) > 0 )
+		{
+			$val[] = "maxSize[".intval($this->field['length'])."]";
+		}
+		
+		
+		if	((isset($this->field['validation_rule']) && $this->field['validation_rule']=="number" ) || $this->field['type']=="number")
+		{
+			$val[] = "custom[number]";		
+		}
+		else if(isset($this->field['validation_rule']) && $this->field['validation_rule']=="alphanumeric")
+		{
+			$val[] = "custom[alphanumeric]";		
+		}
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']  =="email" ) || $this->field['type']=="email")
+		{
+			$val[] = "custom[email]";		
+		}
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']=="website") || $this->field['type']=="website")
+		{
+			$val[] = "custom[url]";		
+		}		
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']=="standard") || (isset($this->field['phone_format']) && $this->field['phone_format']=="standard" ))
+		{
+			$val[] = "custom[phone_standard]";		
+		}
+		else if((isset($this->field['validation_rule']) && $this->field['validation_rule']=="international") || (isset($this->field['phone_format']) && $this->field['phone_format']=="international"))
+		{
+			$val[] = "custom[phone_international]";		
+		}
+		else if($this->field['type']=="time")
+		{
+			
+			$val[] = "custom[number]";	
+			$val[] = "minSize[2]";
+			$val[] = "maxSize[2]";
+			$val[] = "min[0]";
+			
+			if($this->field['hours']==TRUE)
+			{
+				if($this->field['time_type']=="12")
+				{
+					$val[] = "max[12]";
+				}
+				else
+				{
+					$val[] = "max[23]";	
+				}
+			}
+			else if($this->field['mins']==TRUE)
+			{
+				$val[] = "max[59]";	
+			}
+				
+		}
+		else if($this->field['type']=="upload" && explode(",",$this->field['file_types']) > 0)
+		{
+			if(!empty($this->field['file_types']))
+			{
+				$val[] = "funcCall[checkExtensions]";	
+				$val[] = "ext[".str_replace(array(","," "),array("|",""),$this->field['file_types'])."]";
+			}
+		}
+		
+		if(sizeof($val) > 0)
+		{
+			$val = " piereg_validate[".implode(",",$val)."]";
+			$class .= $val;	
+		}
+		
+		return $class;	
+	}*/
+	
+	//Modified since 2.0.21
 
 	function addSubmit()
 	{
@@ -740,7 +849,7 @@ class Edit_form extends PieReg_Base
 		if( isset($check_payment['alternate_profilepage']) && !empty($check_payment['alternate_profilepage']) && empty($cancel_url) ){
 			$cancel_url = $this->get_page_permalink_by_id( $check_payment['alternate_profilepage'] );
 		}
-		$data .= '<input type="button" class="piereg_cancel_profile_edit_btn" onclick="location.replace(\''.($cancel_url).'\');" value="'.__("Cancel","piereg").'" />';
+		$data .= '<input type="submit" class="piereg_cancel_profile_edit_btn" onclick="location.replace(\''.($cancel_url).'\');" value="'.__("Cancel","piereg").'" />';
 		$data .= '<input name="pie_submit_update" type="submit" value="'.__($this->field['text'],"piereg").'" />';	
 		return $data;
 	}
@@ -971,6 +1080,10 @@ class Edit_form extends PieReg_Base
 				case 'password':
 					$profile_fields_data .= '<div class="fieldset">';
 				break;
+				//Added since 2.0.21
+				case 'submit':
+					$profile_fields_data .= '<div class="fieldset piereg_submit_button">';
+				break;
 			endswitch;
 			
 		
@@ -1063,6 +1176,7 @@ class Edit_form extends PieReg_Base
 				case 'date':				
 				case 'list':							
 				case 'default':
+				case 'submit':
 				$profile_fields_data .= '</div>';
 				
 				break;							
@@ -1255,6 +1369,8 @@ class Edit_form extends PieReg_Base
 				}else{
 					$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.$validation_message );
 				}
+			}else if((!isset($field_name) || empty($field_name)) && !$required){
+				continue;
 			}
 			else if($rule=="number")
 			{
@@ -1266,7 +1382,7 @@ class Edit_form extends PieReg_Base
 			}
 			else if($rule=="alphanumeric")
 			{
-				if(! preg_match("/^([a-z0-9])+$/i", $field_name))
+				if(! preg_match("/^([a-z0-9 ])+$/i", $field_name))
 				{
 					$errors->add( $slug , '<strong>'.ucwords(__('error','piereg')).'</strong>: '.$field['label'] .apply_filters("piereg_field_may_only_contain_alpha_numeric_characters",__(' field may only contain alpha-numeric characters.','piereg' )));
 				}	
@@ -1348,21 +1464,21 @@ class Edit_form extends PieReg_Base
 						case 'time':
 							if($_POST[$slug]['time_format'])
 							{
-								$_POST[$slug]['hh'] = intval($_POST[$slug]['hh']);
+								$_POST[$slug]['hh'] = sprintf('%02d',intval($_POST[$slug]['hh']));
 								if($_POST[$slug]['hh'] > 12)
 									$_POST[$slug]['hh'] = "12";
 								
-								$_POST[$slug]['mm'] = intval($_POST[$slug]['mm']);
+								$_POST[$slug]['mm'] = sprintf('%02d',intval($_POST[$slug]['mm']));
 								if($_POST[$slug]['mm'] > 59)
 									$_POST[$slug]['mm'] = "59";
 								$field_name			= $_POST[$slug];
 								update_user_meta($this->user_id, "pie_".$slug, $field_name);
 							}else{
-								$_POST[$slug]['hh'] = intval($_POST[$slug]['hh']);
+								$_POST[$slug]['hh'] = sprintf('%02d',intval($_POST[$slug]['hh']));
 								if($_POST[$slug]['hh'] > 23)
 									$_POST[$slug]['hh'] = "23";
 								
-								$_POST[$slug]['mm'] = intval($_POST[$slug]['mm']);
+								$_POST[$slug]['mm'] = sprintf('%02d',intval($_POST[$slug]['mm']));
 								if($_POST[$slug]['mm'] > 59)
 									$_POST[$slug]['mm'] = "59";
 								

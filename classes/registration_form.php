@@ -162,11 +162,11 @@ class Registration_form extends PieReg_Base
 		
 		$time_this_values = $this->getDefaultValue($name);
 		
-		$data .= '<div class="piereg_time"><div class="time_fields"><input value="'.((isset($time_this_values["hh"]))?$time_this_values["hh"]:"").'" maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("HH","piereg").'</label></div>';
+		$data .= '<div class="piereg_time"><div class="time_fields"><input value="'.((isset($time_this_values["hh"]))?sprintf('%02d',$time_this_values["hh"]):"").'" maxlength="2" id="hh_'.$this->id.'" name="'.$this->name.'[hh]" type="text"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("HH","piereg").'</label></div>';
 		$this->field['hours'] = FALSE;
 		
 		$this->field['mins'] = TRUE;
-		$data .= '<span class="colon">:</span><div class="time_fields"><input value="'.((isset($time_this_values["mm"]))?$time_this_values["mm"]:"").'" maxlength="2" id="mm_'.$this->id.'" type="text" name="'.$this->name.'[mm]"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("MM","piereg").'</label></div><div id="time_format_field_'.$this->id.'" class="time_fields"></div>';
+		$data .= '<span class="colon">:</span><div class="time_fields"><input value="'.((isset($time_this_values["mm"]))?sprintf('%02d',$time_this_values["mm"]):"").'" maxlength="2" id="mm_'.$this->id.'" type="text" name="'.$this->name.'[mm]"  class="'.$this->addClass().'"  '.$this->addValidation().'><label>'.__("MM","piereg").'</label></div><div id="time_format_field_'.$this->id.'" class="time_fields"></div>';
 		$this->field['mins'] = FALSE;
 		
 		if($this->field['time_type']=="12")
@@ -236,7 +236,7 @@ class Registration_form extends PieReg_Base
 					}
 					//var_dump($this->field['value'][$a]);
 					//echo($thispostedval." | ".$this->field['value'][$a]." | ".$selected)."<br />";
-					if($this->field['value'][$a] !="" && $this->field['display'][$a] != "")
+					//if($this->field['value'][$a] !="" && $this->field['display'][$a] != "")
 					$data .= '<option '.$selected.' value="'.$this->field['value'][$a].'">'.$this->field['display'][$a].'</option>';	
 					}
 			}
@@ -391,7 +391,7 @@ class Registration_form extends PieReg_Base
 		
 		$data .= '<div class="address">
 		  <div class="address2">
-			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass("input_fields",array("custom[alphabetic]")).'"  '.$this->addValidation().' value="'.((isset($address_values['city']))?$address_values['city']:"").'">
+			<input type="text" name="'.$this->name.'[city]" id="city_'.$this->id.'" class="'.$this->addClass().'"  '.$this->addValidation().' value="'.((isset($address_values['city']))?$address_values['city']:"").'">
 			<label>'.__("City","piereg").'</label>
 		  </div>';
 		
@@ -402,7 +402,7 @@ class Registration_form extends PieReg_Base
 			 	if($this->field['address_type'] == "International")
 				{
 					$data .= '<div class="address2"  >
-					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass("input_fields",array("custom[alphabetic]")).'"  '.$this->addValidation().' value="'.((isset($address_values['state']))?$address_values['state']:"").'">
+					<input type="text" name="'.$this->name.'[state]" id="state_'.$this->id.'" class="'.$this->addClass().'" value="'.((isset($address_values['state']))?$address_values['state']:"").'">
 					<label>'.__("State / Province / Region","piereg").'</label>
 				 	 </div>';		
 				}
@@ -817,7 +817,7 @@ class Registration_form extends PieReg_Base
 		{
 			
 			$val[] = "custom[number]";	
-			$val[] = "minSize[2]";
+			$val[] = "minSize[1]";
 			$val[] = "maxSize[2]";
 			$val[] = "min[0]";
 			
@@ -1503,6 +1503,8 @@ class Registration_form extends PieReg_Base
 			{
 				
 				$errors->add( $slug , "<strong>". __(ucwords("error"),"piereg").":</strong> " .$validation_message );				
+			}else if((!isset($field_name) || empty($field_name)) && !$required){
+				continue;
 			}
 			else if($rule=="number")
 			{
